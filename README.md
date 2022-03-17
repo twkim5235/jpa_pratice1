@@ -24,3 +24,13 @@
 - 스프링 부트 thymeleaf viewName 매핑
   - `resources:templates` + {ViewName} + `html`
 
+
+
+### 도메인 모델과 테이블 설계
+
+![](./picture/도메인_모델.png)
+
+
+
+![](./picture/DB_구조도.png)
+
