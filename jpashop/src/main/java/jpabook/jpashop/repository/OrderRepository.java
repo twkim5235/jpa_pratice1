@@ -13,7 +13,6 @@ public class OrderRepository {
 
     private final EntityManager em;
 
-    @Transactional
     public void save(Order order) {
         em.persist(order);
     }
