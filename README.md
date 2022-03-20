@@ -108,3 +108,39 @@ Setter가 모두 열려있으면 변경 포인트가 너무 많아서, 유지보
 
 
 
+#### 성능 최적화
+
+##### 조회 메소드에는 @Transactional(readOnly=true)로 설정하자
+
+- readOnly = true로 설정할 시 더티 체크도 안하고, 읽기 전용으로 트랜잭션이 생성되기 때문에 DB에 따라 리소스도 줄일 수 있기때문에 성능을 최적화 할 수 있다.
+
+
+
+#### Test 팁
+
+##### 예외 처리 방식 Junit4 vs Junit5
+
+Junit4
+
+~~~java
+@Test(expected = 특정Exeption.class)
+public void Test() throw Exception{
+  
+}
+~~~
+
+@Test 어노테이션에 expected의 value만 추가하면 됬었다.
+
+Junit5
+
+~~~java
+@Test
+public void duplicateMemberException() throws Exception{
+				....
+
+        //then
+        assertThrows(특정 Exception.class, () -> 	memberService.join(member2));
+    }
+~~~
+
+asserThorw를 이용하여, 특정 Exception에 대하여 처리한다.
