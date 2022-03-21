@@ -1,18 +1,18 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.domain.Address;
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.OrderSearch;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -97,5 +97,71 @@ class OrderServiceTest {
         member.setAddress(new Address("서울", "강가", "123-123"));
         em.persist(member);
         return member;
+    }
+
+    @Test
+    public void joinTest() {
+        Member member = new Member();
+        member.setName("test1");
+        em.persist(member);
+
+        Member member2 = new Member();
+        member2.setName("test2");
+        em.persist(member2);
+
+        Member member3 = new Member();
+        member3.setName("test3");
+        em.persist(member3);
+
+        Member member4 = new Member();
+        member4.setName("test4");
+        em.persist(member4);
+
+        Member member5 = new Member();
+        member5.setName("test5");
+        em.persist(member5);
+
+
+        Delivery delivery = new Delivery();
+        delivery.setAddress(member.getAddress());
+        em.persist(delivery);
+
+        Book book = new Book();
+        book.setName("SAdf");
+        book.setPrice(10000);
+        book.setStockQuantity(100);
+        em.persist(book);
+
+        OrderItem orderItem = OrderItem.createOrderItem(book, book.getPrice(), 2);
+        em.persist(orderItem);
+
+        Order order1 = Order.createOrder(member, delivery, orderItem);
+        em.persist(order1);
+
+        Order order2 = Order.createOrder(member2, delivery, orderItem);
+        em.persist(order2);
+
+        Order order3 = Order.createOrder(member3, delivery, orderItem);
+        em.persist(order3);
+
+        Order order4 = Order.createOrder(member4, delivery, orderItem);
+        em.persist(order4);
+
+        Order order5 = Order.createOrder(member5, delivery, orderItem);
+        em.persist(order5);
+
+        em.flush();
+        em.clear();
+
+        System.out.println("\n\n\n\n\n=================== SQL ======================");
+        List<Order> allOrder = orderRepository.findAll(new OrderSearch());
+        System.out.println("\n\n\n\n\n=================== SQL ======================");
+        allOrder.stream().forEach(order -> {
+            Member member1 = order.getMember();
+            System.out.println(member1.getClass());
+            System.out.println(member1.getName());
+            System.out.println("\n\n");
+        });
+
     }
 }

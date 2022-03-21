@@ -22,14 +22,9 @@ public class OrderRepository {
     }
 
     public List<Order> findAll(OrderSearch orderSearch) {
-        String jpql = "select o from Order o join o.member m " +
-                "where o.status = :status " +
-                "and m.name like :name";
-
-        return em.createQuery(jpql, Order.class)
-                .setParameter("status", orderSearch.getOrderStatus())
-                .setParameter("name", orderSearch.getMemberName())
-                .setMaxResults(1000) //최대 1000건
+        String jpql = "select o from Order o join fetch o.member";
+        List<Order> resultList = em.createQuery(jpql, Order.class)
                 .getResultList();
+        return resultList;
     }
 }
